@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Options</title>
+  <style>
+    body {
+      padding-top: 40px;
+      padding-bottom: 40px;
+      background-color: #eee;
+    }
+    .suggestion {
+      margin-right: 5px;
+      margin-top: 5px;
+      display: block;
+    }
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container">
+    <form>
+      <div class="form-group">
+        <label for="duolingo-username">Duolingo Username</label>
+        <input class="form-control" type="text" id="duolingo-username"></input>
+        <p id="duolingo-link-status" class="help-block"></p>
+      </div>
+
+      <div class="form-group">
+        <label for="currency-per-lesson">Potions per Review</label>
+        <input class="form-control" type="number" id="currency-per-lesson"></input>
+      </div>
+
+      <div class="form-group">
+        <label for="minutes-per-currency">Minutes per Potion</label>
+        <input class="form-control" type="number" id="minutes-per-currency"></input>
+      </div>
+
+      <div class="form-group">
+        <div style="margin-bottom: 10px">
+          <label>Suggested Sites (Click to Add):</label>
+          <div id="suggested-sites"></div>
+        </div>
+
+        <label for="blocked-sites">Manually Enter Blocked Sites (Javascript Regexes):</label>
+        <textarea id="blocked-sites" class="form-control" rows="5"></textarea>
+      </div>
+
+      <div class="form-group">
+        <button id="save" type="submit" class="btn btn-primary btn-block">Save</button>
+        <div id="status"></div>
+      </div>
+    </form>
+  </div>
+
+  <script src="../js/lib.js"></script>
+  <script src="../js/options.js"></script>
+</body>
+</html>

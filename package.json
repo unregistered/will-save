@@ -1,0 +1,46 @@
+{
+  "name": "will-save",
+  "version": "0.9.0",
+  "description": "Block time wasting sites until enough duolingo reviews have been done.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unregistered/will-save.git"
+  },
+  "author": "Chris Li <chris@topher.li>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unregistered/will-save/issues"
+  },
+  "homepage": "https://github.com/unregistered/will-save#readme",
+  "devDependencies": {
+    "browserify": "^14.1.0",
+    "event-stream": "^3.3.4",
+    "factor-bundle": "^2.5.0",
+    "fs": "0.0.1-security",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-run-sequence": "^0.3.2",
+    "gulp-shell": "^0.6.3",
+    "gulp-util": "^3.0.8",
+    "gulp-zip": "^4.0.0",
+    "multistream-merge": "^0.2.0",
+    "tsify": "^3.0.1",
+    "typescript": "^2.2.2",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "@types/chrome": "0.0.44",
+    "@types/jquery": "^2.0.41",
+    "@types/lodash": "^4.14.58",
+    "@types/loglevel": "^1.4.29",
+    "@types/node": "^7.0.12",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
+    "loglevel": "^1.4.1"
+  }
+}

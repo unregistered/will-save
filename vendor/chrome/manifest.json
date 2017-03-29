@@ -1,0 +1,43 @@
+{
+	"manifest_version": 2,
+	"name": "Will Save",
+	"description": "Blocks time wasting sites, gain access by doing Duolingo reviews.",
+	"version": "0.0.1",
+
+	"permissions": [
+		"tabs",
+		"storage"
+	],
+
+	"options_ui": {
+		"page": "html/options.html",
+		"chrome_style": false,
+		"open_in_tab": false
+	},
+
+	"background": {
+		"scripts": ["js/lib.js", "js/background.js"],
+		"persistent": false
+	},
+
+	"content_scripts": [{
+		"run_at": "document_start",
+		"css": [],
+		"js": [
+			"js/lib.js",
+			"js/content.js"
+		],
+		"matches": [
+			"<all_urls>"
+		]
+	}],
+
+	"icons" : {
+		"512" : "img/logos_512.png"
+	},
+
+	"web_accessible_resources": [
+		"img/*.png",
+		"js/*.js"
+	]
+}
