@@ -6,7 +6,7 @@ var rseq       = require('gulp-run-sequence');
 var zip        = require('gulp-zip');
 var shell      = require('gulp-shell');
 var chrome     = require('./vendor/chrome/manifest');
-var firefox    = require('./vendor/firefox/package');
+var firefox    = require('./vendor/firefox/manifest');
 var browserify = require('browserify');
 var gutil      = require("gulp-util");
 var tsify      = require("tsify");
@@ -78,13 +78,11 @@ gulp.task('chrome', ['bundle'], function() {
 
 gulp.task('firefox', function() {
   return es.merge(
-    pipe('./build/artifacts/*.js', './build/firefox/data/js'),
-    pipe('./img/**/*', './build/firefox/data/img'),
-    pipe('./css/**/*', './build/firefox/data/css'),
-    pipe('./html/**/*', './build/firefox/data/html'),
-    pipe('./vendor/firefox/browser.js', './build/firefox/data/js'),
-    pipe('./vendor/firefox/main.js', './build/firefox/data'),
-    pipe('./vendor/firefox/package.json', './build/firefox/')
+    pipe('./build/artifacts/*.js', './build/firefox/js'),
+    pipe('./img/**/*', './build/firefox/img'),
+    pipe('./css/**/*', './build/firefox/css'),
+    pipe('./html/**/*', './build/firefox/html'),
+    pipe('./vendor/firefox/manifest.json', './build/firefox/')
   );
 });
 

@@ -67,7 +67,7 @@ let updateDuolingoLinkStatus = (text) => {
 }
 
 $(document).ready(() => {
-    Logger.info("Attach to dom")
+    Logger.info("Attach to dom. Browser:", browser)
 
     let blacklist = new SiteBlacklist($('#blocked-sites'))
 
@@ -82,6 +82,7 @@ $(document).ready(() => {
     $('#suggested-sites').append(suggestedSites)
 
     // Fetch other info
+    Logger.info("Get infos")
     access.getDefaultTime((minutes) => {
         $('#minutes-per-currency').val(minutes)
     })

@@ -4,8 +4,6 @@ import * as $ from "jquery"
 import {TypedDatastore, DataKey, DatastoreAccess} from "./siteblock/core"
 import * as loglevel from 'loglevel'
 
-/// <reference path="./node_modules/chrome/index.d.ts"/>
-
 let browser = BrowserProvider.getBrowser()
 let datastore = new TypedDatastore(browser)
 let access = new DatastoreAccess(datastore)
@@ -68,19 +66,21 @@ class CurrencyUpdater {
 
 let currencyUpdater = new CurrencyUpdater()
 
-chrome.runtime.onMessage.addListener(function(request, sender) {
-    if (request.redirect != undefined) {
-        chrome.tabs.update(sender.tab.id, {url: request.redirect});
-    } else if (request.updateCurrency != undefined) {
-        currencyUpdater.update()
-    }
-});
-
-chrome.runtime.onInstalled.addListener((details) => {
-    console.log("Was installed")
-    access.getDuolingoUsername((uname) => {
-        if (uname == '') {
-            browser.openOptionsPage()
+if (chrome != undefined) {
+    chrome.runtime.onMessage.addListener(function(request, sender) {
+        if (request.redirect != undefined) {
+            chrome.tabs.update(sender.tab.id, {url: request.redirect});
+        } else if (request.updateCurrency != undefined) {
+            currencyUpdater.update()
         }
+    });
+
+    chrome.runtime.onInstalled.addListener((details) => {
+        console.log("Was installed")
+        access.getDuolingoUsername((uname) => {
+            if (uname == '') {
+                browser.openOptionsPage()
+            }
+        })
     })
-})
+}

@@ -5,15 +5,22 @@
 	"version": "0.0.1",
 	"incognito": "spanning",
 
+    "applications": {
+        "gecko": {
+            "id": "will-save@unregistered",
+            "strict_min_version": "48.0"
+        }
+    },
+
 	"permissions": [
 		"tabs",
-		"storage"
+		"storage",
+		"*://www.duolingo.com/*"
 	],
 
 	"options_ui": {
 		"page": "html/options.html",
-		"chrome_style": false,
-		"open_in_tab": false
+		"open_in_tab": true
 	},
 
 	"background": {
