@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
 	"name": "Will Save",
-	"description": "Blocks time wasting sites, gain access by doing Duolingo reviews.",
-	"version": "0.0.1",
+	"description": "Blocks time wasting sites until Duolingo reviews are done.",
+	"version": "1.0.0",
 	"incognito": "spanning",
 
 	"permissions": [
