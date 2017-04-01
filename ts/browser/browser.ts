@@ -2,16 +2,22 @@
 /// <reference path="../../node_modules/web-ext-types/global/index.d.ts"/>
 
 export interface Browser {
+    // Data APIs
     getUrl(url: string): string
     writeData(key: string, val: string, onWrite: Function): void
     readData(key: String, onRead: Function): void
-
     subscribeToChanges(key: String, onChange: Function): void
 
-    redirectTo(url: string): void
-    openOptionsPage(): void
+    // Message sending
+    publish(key: string, obj: any): void
+    subscribe(key: string, callback: Function): void
 
-    updateCurrencyBackground(): void
+    // Tabs
+    redirectTab(tabId: number, url: string): void
+
+    // Misc
+    openOptionsPage(): void
+    runOnFirstInstall(callback: Function): void
 }
 
 class ChromeBrowser implements Browser {
@@ -57,6 +63,22 @@ class ChromeBrowser implements Browser {
         }
     }
 
+    publish(key: string, obj: any) {
+        chrome.runtime.sendMessage({key: key, val: obj})
+    }
+
+    subscribe(key: string, callback: Function) {
+        chrome.runtime.onMessage.addListener((request, sender) => {
+            if (request.key == key) {
+                callback(request.val, sender.tab.id)
+            }
+        })
+    }
+
+    redirectTab(tabId: number, url: string) {
+        chrome.tabs.update(tabId, {url: url})
+    }
+
     redirectTo(url) {
         chrome.runtime.sendMessage({redirect: url})
     }
@@ -68,11 +90,17 @@ class ChromeBrowser implements Browser {
     updateCurrencyBackground() {
         chrome.runtime.sendMessage({updateCurrency: true})
     }
+
+    runOnFirstInstall(callback: Function) {
+        chrome.runtime.onInstalled.addListener((details) => {
+            callback()
+        })
+    }
 }
 
 class FirefoxBrowser implements Browser {
     private keysToEventHandler: {[Key: string]: [Function]} = {}
-    private browserId = "will-save@unregistered"
+    private extensionId = "will-save@unregistered"
 
     constructor() {
         this.startListeningForChanges()
@@ -89,10 +117,8 @@ class FirefoxBrowser implements Browser {
     }
 
     readData(key, onValue) {
-        console.log("Read data")
         browser.storage.local.get(key).then((val) => {
-            console.log("Promise resolved", val)
-            onValue()
+            onValue(val)
         })
     }
 
@@ -118,8 +144,25 @@ class FirefoxBrowser implements Browser {
         }
     }
 
+    publish(key: string, obj: any) {
+        browser.runtime.sendMessage(this.extensionId, {key: key, val: obj})
+    }
+
+    subscribe(key: string, callback: Function) {
+        browser.runtime.onMessage.addListener((request, sender) => {
+            if (request.key == key) {
+                callback(request.val)
+            }
+            return true
+        })
+    }
+
+    redirectTab(tabId: number, url: string) {
+        browser.tabs.update(tabId, {url: url})
+    }
+
     redirectTo(url) {
-        browser.runtime.sendMessage(this.browserId, {redirect: url})
+        browser.runtime.sendMessage(this.extensionId, {redirect: url})
     }
 
     openOptionsPage() {
@@ -127,7 +170,13 @@ class FirefoxBrowser implements Browser {
     }
 
     updateCurrencyBackground() {
-        browser.runtime.sendMessage(this.browserId, {updateCurrency: true})
+        browser.runtime.sendMessage(this.extensionId, {updateCurrency: true})
+    }
+
+    runOnFirstInstall(callback: Function) {
+        browser.runtime.onInstalled.addListener((details) => {
+            callback()
+        })
     }
 }
 

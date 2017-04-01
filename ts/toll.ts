@@ -2,6 +2,7 @@ import {BrowserProvider} from "./browser/browser"
 import * as $ from "jquery"
 import * as loglevel from 'loglevel'
 import {TypedDatastore, DataKey, DatastoreAccess} from "./siteblock/core"
+import {TypedEventHub} from "./siteblock/events"
 import * as _ from 'lodash'
 import * as url from 'url'
 import * as querystring from 'querystring'
@@ -13,6 +14,7 @@ let Logger = loglevel.getLogger('Bootstrap')
 let browser = BrowserProvider.getBrowser()
 let datastore = new TypedDatastore(browser)
 let access = new DatastoreAccess(datastore)
+let eventHub = new TypedEventHub(browser)
 
 let query = url.parse(window.location.href).query
 let returnTo: string = querystring.parse(query)['r']
@@ -23,7 +25,7 @@ $(document).ready(() => {
             // Give the user more time
             access.giveDefaultTime(() => {
                 // Then redirect to the page
-                browser.redirectTo(returnTo)
+                eventHub.requestRedirect(returnTo)
             })
         }, () => {
             Logger.error("Not enough gems")
@@ -32,7 +34,7 @@ $(document).ready(() => {
     })
 
     $('#mine').click((e) => {
-        browser.redirectTo("https://www.duolingo.com/")
+        eventHub.requestRedirect("https://www.duolingo.com/")
     })
 
     $('#options').click((e) => {
@@ -66,7 +68,7 @@ $(document).ready(() => {
     datastore.subscribeToChanges(DataKey.CURRENT_SESSION_VALID_UNTIL, (newTime) => {
         let now = new Date().getTime()
         if (now < newTime) {
-            browser.redirectTo(returnTo)
+            eventHub.requestRedirect(returnTo)
         }
     })
 
@@ -77,5 +79,5 @@ $(document).ready(() => {
     let returnUrl = url.parse(returnTo)
     $('#target-site').html(returnUrl.hostname)
 
-    browser.updateCurrencyBackground()
+    eventHub.requestCurrencyUpdate()
 })

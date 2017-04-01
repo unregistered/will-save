@@ -3,6 +3,7 @@ import * as $ from "jquery"
 import * as loglevel from 'loglevel'
 import {BrowserProvider} from "./browser/browser"
 import {TypedDatastore, DataKey, DatastoreAccess} from "./siteblock/core"
+import {TypedEventHub} from './siteblock/events'
 import * as _ from 'lodash'
 
 loglevel.enableAll() // For debug
@@ -11,6 +12,7 @@ let Logger = loglevel.getLogger('Bootstrap')
 let browser = BrowserProvider.getBrowser()
 let datastore = new TypedDatastore(browser)
 let access = new DatastoreAccess(datastore)
+let eventHub = new TypedEventHub(browser)
 
 if (/.*duolingo\.com/.test(window.location.hostname)) {
     Logger.info("Bootstrapping Duolingo watcher")
@@ -21,7 +23,7 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
 
     watcher.on(WatcherEvent.PRACTICE_END, () => {
         Logger.info("Lesson completed, user is credited with a gem")
-        browser.updateCurrencyBackground()
+        eventHub.requestCurrencyUpdate()
     })
 } else {
     Logger.info("Bootstrapping other site watcher")
@@ -49,12 +51,13 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
             access.getMillisecondsToSessionExpiration((timeToGo) => {
                 if (timeToGo < 0) {
                     // There is no active session, bring the user to the blocked page
+                    Logger.info("No active session")
                     let url = browser.getUrl("html/toll.html")
                     let urlWithParams = url + "?r=" + encodeURIComponent(window.location.href)
-                    browser.redirectTo(urlWithParams)
+                    eventHub.requestRedirect(urlWithParams)
                 } else {
                     // There is an active session but we want to end it later
-                    Logger.debug("Active session exists, sleep for", timeToGo)
+                    Logger.info("Active session exists, sleep for", timeToGo)
                     setTimeout(checkExpiration, timeToGo + 1000) // buffer to ensure value is correct later
                 }
             })

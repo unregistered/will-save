@@ -3,13 +3,14 @@ import {DuolingoAPI, DuolingoAPIResponse} from "./duolingo/api"
 import * as $ from "jquery"
 import {TypedDatastore, DataKey, DatastoreAccess} from "./siteblock/core"
 import * as loglevel from 'loglevel'
+import {TypedEventHub} from './siteblock/events'
 
 let browser = BrowserProvider.getBrowser()
 let datastore = new TypedDatastore(browser)
 let access = new DatastoreAccess(datastore)
 
 loglevel.enableAll() // For debug
-let Logger = loglevel.getLogger('Options')
+let Logger = loglevel.getLogger('Background')
 
 class CurrencyUpdater {
     private updating = false
@@ -66,21 +67,21 @@ class CurrencyUpdater {
 
 let currencyUpdater = new CurrencyUpdater()
 
-if (chrome != undefined) {
-    chrome.runtime.onMessage.addListener(function(request, sender) {
-        if (request.redirect != undefined) {
-            chrome.tabs.update(sender.tab.id, {url: request.redirect});
-        } else if (request.updateCurrency != undefined) {
-            currencyUpdater.update()
+browser.runOnFirstInstall(() => {
+    Logger.info("Was installed")
+    access.getDuolingoUsername((uname) => {
+        if (uname == '') {
+            browser.openOptionsPage()
         }
-    });
-
-    chrome.runtime.onInstalled.addListener((details) => {
-        console.log("Was installed")
-        access.getDuolingoUsername((uname) => {
-            if (uname == '') {
-                browser.openOptionsPage()
-            }
-        })
     })
-}
+})
+
+let eventHub = new TypedEventHub(browser)
+
+eventHub.onCurrencyUpdate(() => {
+    currencyUpdater.update();
+})
+
+eventHub.onRedirect((url: string, tabId: number) => {
+    browser.redirectTab(tabId, url)
+})
