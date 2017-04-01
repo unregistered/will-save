@@ -62,6 +62,8 @@ $(document).ready(() => {
             $('.hide-when-potions').hide()
             $('.hide-when-no-potions').show()
         }
+
+        $('body').removeClass('hidden')
     })
 
     // If the user purchases more time on another page, redirect them for free
