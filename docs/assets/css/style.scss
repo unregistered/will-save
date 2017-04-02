@@ -1,0 +1,37 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+body {
+    font-size: 15pt;
+}
+
+img {
+    border: none;
+    box-shadow: none;
+    display: block;
+}
+
+#centered-logo {
+    position: absolute;
+    left: 210px;
+    top: 70px;
+    z-index: 1000;
+    width: 200px;
+}
+
+#main_content {
+    margin-top: 80px;
+}
+
+.browser-button {
+    float: left;
+    margin: 0px 55px;
+    .browser-button-container {
+        width: 128px;
+    }
+    .title {
+        text-align: center;
+    }
+}

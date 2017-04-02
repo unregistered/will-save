@@ -5,6 +5,7 @@
         "**/node_modules": true,
         "**/bower_components": true,
         "**/tmp": true,
-        "**/build": true
+        "**/build": true,
+        "**/_site": true
     }
 }
