@@ -14,6 +14,10 @@ Install: https://unregistered.github.io/will-save/
     npm install
     gulp watch
 
+## Releasing
+
+    gulp clean build-release chrome firefox
+
 ## Credits
 
 Original gulpfile/project structure: Copyright (MIT) info@likastore.com https://github.com/likeastore/browser-extension

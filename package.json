@@ -25,6 +25,7 @@
     "gulp-clean": "^0.3.2",
     "gulp-run-sequence": "^0.3.2",
     "gulp-shell": "^0.6.3",
+    "gulp-uglify": "^2.1.2",
     "gulp-util": "^3.0.8",
     "gulp-zip": "^4.0.0",
     "multistream-merge": "^0.2.0",

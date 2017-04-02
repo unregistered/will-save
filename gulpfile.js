@@ -11,9 +11,10 @@ var browserify = require('browserify');
 var gutil      = require("gulp-util");
 var tsify      = require("tsify");
 var factor     = require('factor-bundle');
-var source     = require('vinyl-source-stream')
-var buffer     = require('vinyl-buffer')
+var source     = require('vinyl-source-stream');
+var buffer     = require('vinyl-buffer');
 var merge      = require('multistream-merge');
+var uglify     = require('gulp-uglify');
 
 function pipe(src, transforms, dest) {
   if (typeof transforms === 'string') {
@@ -33,11 +34,7 @@ function pipe(src, transforms, dest) {
   return stream;
 }
 
-gulp.task('clean', function() {
-  return pipe('./build', [clean()]);
-});
-
-gulp.task('bundle', function(done) {
+function bundle(debugMode) {
   var TS_SOURCE_DIR = "./ts/"
   var BUILD_DEST_DIR = "./build/artifacts/"
 
@@ -49,7 +46,7 @@ gulp.task('bundle', function(done) {
 
   var b = browserify({
     entries: srcFilePaths,
-    debug: true,
+    debug: debugMode,
     // Any packages that don't use require() can be added here for a speed boost
     noParse: ['jquery', 'lodash'].map((p) => require.resolve(p)),
     cache: {},
@@ -63,7 +60,26 @@ gulp.task('bundle', function(done) {
     .on('error', gutil.log.bind(gutil, "Browserify Error"))
     .on('log', gutil.log.bind(gutil, "Browserify Log"))
 
-  return merge.obj(destStreams.concat(commonStream)).pipe(buffer()).pipe(gulp.dest(BUILD_DEST_DIR))
+  var stream = merge.obj(destStreams.concat(commonStream))
+    .pipe(buffer())
+  
+  if (!debugMode) {
+    stream = stream.pipe(uglify())
+  }
+
+  return stream.pipe(gulp.dest(BUILD_DEST_DIR))
+}
+
+gulp.task('clean', function() {
+  return pipe('./build', [clean()]);
+});
+
+gulp.task('bundle', function() {
+  bundle(true);
+});
+
+gulp.task('bundle-release', function() {
+  bundle(false);
 });
 
 gulp.task('chrome', ['bundle'], function() {
