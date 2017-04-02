@@ -119,10 +119,11 @@ gulp.task('chrome-dist', function () {
     .pipe(gulp.dest('./dist/chrome'));
 });
 
-gulp.task('firefox-dist', shell.task([
-  'mkdir -p dist/firefox',
-  'cd ./build/firefox && ../../tools/addon-sdk-1.16/bin/cfx xpi --output-file=../../dist/firefox/firefox-extension-' + firefox.version + '.xpi > /dev/null',
-]));
+gulp.task('firefox-dist', function () {
+  gulp.src('./build/firefox/**/*')
+    .pipe(zip('firefox-extension-' + firefox.version + '.zip'))
+    .pipe(gulp.dest('./dist/chrome'));
+});
 
 gulp.task('safari-dist', function () {
   pipe('./vendor/safari/Update.plist', './dist/safari');
