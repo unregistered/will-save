@@ -7,8 +7,11 @@ you've restricted.
 
 Will Save is Alpha, working towards a release.
 
+Install: https://unregistered.github.io/will-save/
+
 ## Building
 
+    npm install
     gulp watch
 
 ## Credits
