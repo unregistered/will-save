@@ -75,11 +75,11 @@ gulp.task('clean', function() {
 });
 
 gulp.task('bundle', function() {
-  bundle(true);
+  return bundle(true);
 });
 
 gulp.task('bundle-release', function() {
-  bundle(false);
+  return bundle(false);
 });
 
 gulp.task('chrome', ['bundle'], function() {

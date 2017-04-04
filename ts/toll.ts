@@ -83,3 +83,10 @@ $(document).ready(() => {
 
     eventHub.requestCurrencyUpdate()
 })
+
+// Alter back behavior: since we redirected, we should skip the page which causes issues. This is useful
+// if the user comes to a blocked site through a search engine or link, we don't want to trap the user.
+history.pushState(null, null, document.URL)
+window.addEventListener('popstate', function () {
+    window.history.go(-2)
+});
