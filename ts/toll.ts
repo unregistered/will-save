@@ -75,7 +75,7 @@ $(document).ready(() => {
     })
 
     access.getDefaultTime((minutes) => {
-        $('#default-time').html(minutes.toString)
+        $('#default-time').html(minutes.toString())
     })
 
     let returnUrl = url.parse(returnTo)

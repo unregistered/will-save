@@ -13,7 +13,7 @@ export class TypedDatastore {
         this.browser.writeData(keyAsString, value, onComplete)
     }
 
-    getData(key: DataKey, onRead: (value: any) => void, defaultVal: any = undefined) {
+    getData<T>(key: DataKey, onRead: (value: T) => void, defaultVal?: T) {
         this.browser.readData(DataKey[key], (obj) => {
             let val = obj[DataKey[key]]
             let valOrDefault = val ? val : defaultVal
@@ -31,7 +31,7 @@ export class DatastoreAccess {
 
     incrementCurrency(times: number, onComplete: (newLevel: number) => void) {
         this.getDefaultCurrencyPerLesson((gain) => {
-            this.store.getData(DataKey.CURRENCY_COUNT, (currency: number) => {
+            this.store.getData<number>(DataKey.CURRENCY_COUNT, (currency) => {
                 let newLevel = currency += gain * times
                 this.store.setData(DataKey.CURRENCY_COUNT, newLevel, () => {
                     onComplete(newLevel)
@@ -41,7 +41,7 @@ export class DatastoreAccess {
     }
 
     decrementCurrency(onSuccess: (newCurrency: number) => void, onFail: () => void) {
-        this.store.getData(DataKey.CURRENCY_COUNT, (currency) => {
+        this.store.getData<number>(DataKey.CURRENCY_COUNT, (currency) => {
             if (currency > 0) {
                 let newCurrency = currency - 1
                 this.store.setData(DataKey.CURRENCY_COUNT, newCurrency, () => {
@@ -54,7 +54,7 @@ export class DatastoreAccess {
     }
 
     getAndSubscribeToCurrency(withCurrency: OnChangeCallback) {
-        this.store.getData(DataKey.CURRENCY_COUNT, (currency: number) => {
+        this.store.getData<number>(DataKey.CURRENCY_COUNT, (currency) => {
             withCurrency(currency)
             this.store.subscribeToChanges(DataKey.CURRENCY_COUNT, withCurrency)
         }, 0)
@@ -71,7 +71,7 @@ export class DatastoreAccess {
     }
 
     getDefaultTime(withMinutes: (minutes: number) => void) {
-        this.store.getData(DataKey.MINUTES_PER_CURRENCY, (minutes) => {
+        this.store.getData<number>(DataKey.MINUTES_PER_CURRENCY, (minutes) => {
             withMinutes(minutes)
         }, 10)
     }
@@ -81,7 +81,7 @@ export class DatastoreAccess {
     }
 
     getDefaultCurrencyPerLesson(withGain: (gain: number) => void) {
-        this.store.getData(DataKey.CURRENCY_PER_REVIEW, (gain: number) => {
+        this.store.getData<number>(DataKey.CURRENCY_PER_REVIEW, (gain: number) => {
             withGain(gain)
         }, 1)
     }
@@ -91,14 +91,14 @@ export class DatastoreAccess {
     }
 
     getMillisecondsToSessionExpiration(withTime: (time: number) => void) {
-        this.store.getData(DataKey.CURRENT_SESSION_VALID_UNTIL, (sessionTs) => {
+        this.store.getData<number>(DataKey.CURRENT_SESSION_VALID_UNTIL, (sessionTs) => {
             let now = new Date().getTime()
             withTime(sessionTs - now)
         }, 0)
     }
 
     getBlockList(onResult: (blocklist: string[]) => void) {
-        this.store.getData(DataKey.BLACKLIST, (list) => {
+        this.store.getData<string[]>(DataKey.BLACKLIST, (list) => {
             onResult(list)
         }, [])
     }
@@ -108,7 +108,7 @@ export class DatastoreAccess {
     }
 
     getDuolingoUsername(withName: (username: string) => void) {
-        this.store.getData(DataKey.DUOLINGO_USERNAME, withName, "")
+        this.store.getData<string>(DataKey.DUOLINGO_USERNAME, withName, "")
     }
 
     setDuolingoUsernameAndInitializeInventory(name: string, initialPoints: number) {
@@ -117,7 +117,7 @@ export class DatastoreAccess {
     }
 
     getLastCheckPoints(withPoints: (points: number) => void) {
-        this.store.getData(DataKey.DUOLINGO_LAST_CHECK_POINTS, withPoints, -1)
+        this.store.getData<number>(DataKey.DUOLINGO_LAST_CHECK_POINTS, withPoints, -1)
     }
 
     setLastCheckPoints(points: number, onComplete: () => void) {

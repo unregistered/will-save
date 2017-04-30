@@ -103,12 +103,16 @@ $(document).ready(() => {
     $('#save').on('click', (evt) => {
         doSaveAnimation()
 
+        let currencyPerLesson = parseInt($('#currency-per-lesson').val())
+        let minutesPerCurrency = parseInt($('#minutes-per-currency').val())
+        let duoUsername: string = $('#duolingo-username').val();
+
         access.setBlockList(blacklist.getArray(), () => {})
-        access.setDefaultCurrencyPerLesson($('#currency-per-lesson').val(), () => {})    
-        access.setDefaultTime($('#minutes-per-currency').val(), () => {})
+        access.setDefaultCurrencyPerLesson(currencyPerLesson, () => {})    
+        access.setDefaultTime(minutesPerCurrency, () => {})
 
         access.getDuolingoUsername((oldUsername) => {
-            let rawFieldUsername = $('#duolingo-username').val()
+            let rawFieldUsername = duoUsername;
             let newUsername = $.trim(rawFieldUsername)
             if (oldUsername != newUsername) {
                 // Get new username info
