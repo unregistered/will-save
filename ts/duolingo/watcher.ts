@@ -57,7 +57,7 @@ export class Watcher {
         this.events.emit(WatcherEvent[evt])
     }
 
-    on(evt: WatcherEvent, listener: Function) {
+    on(evt: WatcherEvent, listener: () => void) {
         this.events.on(WatcherEvent[evt], listener)
     }
 }

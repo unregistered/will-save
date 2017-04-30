@@ -1,27 +1,32 @@
 /// <reference path="../../node_modules/@types/chrome/index.d.ts"/>
 /// <reference path="../../node_modules/web-ext-types/global/index.d.ts"/>
 
+export type OnWriteCallback = () => void;
+export type OnReadCallback = (items: {[keys: string]: any}) => void;
+export type OnChangeCallback = (newValue: any, oldValue?: any) => void;
+export type BrowserSubscribeCallback = (value: any, tabId?: number) => void;
+
 export interface Browser {
     // Data APIs
     getUrl(url: string): string
-    writeData(key: string, val: string, onWrite: Function): void
-    readData(key: String, onRead: Function): void
-    subscribeToChanges(key: String, onChange: Function): void
+    writeData(key: string, val: string, onWrite: () => void): void
+    readData(key: String, onRead: OnReadCallback): void
+    subscribeToChanges(key: String, onChange: OnChangeCallback): void
 
     // Message sending
     publish(key: string, obj: any): void
-    subscribe(key: string, callback: Function): void
+    subscribe(key: string, callback: BrowserSubscribeCallback): void
 
     // Tabs
     redirectTab(tabId: number, url: string): void
 
     // Misc
     openOptionsPage(): void
-    runOnFirstInstall(callback: Function): void
+    runOnFirstInstall(callback: () => void): void
 }
 
 class ChromeBrowser implements Browser {
-    private keysToEventHandler: {[Key: string]: [Function]} = {}
+    private keysToEventHandler: {[Key: string]: [OnChangeCallback]} = {}
 
     constructor() {
         this.startListeningForChanges()
@@ -54,7 +59,7 @@ class ChromeBrowser implements Browser {
         })
     }
 
-    subscribeToChanges(key: string, onChange: Function) {
+    subscribeToChanges(key: string, onChange: OnChangeCallback) {
         let existingList = this.keysToEventHandler[key]
         if (existingList == undefined) {
             this.keysToEventHandler[key] = [onChange]
@@ -67,7 +72,7 @@ class ChromeBrowser implements Browser {
         chrome.runtime.sendMessage({key: key, val: obj})
     }
 
-    subscribe(key: string, callback: Function) {
+    subscribe(key: string, callback: BrowserSubscribeCallback) {
         chrome.runtime.onMessage.addListener((request, sender) => {
             if (request.key == key) {
                 callback(request.val, sender.tab.id)
@@ -91,7 +96,7 @@ class ChromeBrowser implements Browser {
         chrome.runtime.sendMessage({updateCurrency: true})
     }
 
-    runOnFirstInstall(callback: Function) {
+    runOnFirstInstall(callback: () => void) {
         chrome.runtime.onInstalled.addListener((details) => {
             callback()
         })
@@ -99,7 +104,7 @@ class ChromeBrowser implements Browser {
 }
 
 class FirefoxBrowser implements Browser {
-    private keysToEventHandler: {[Key: string]: [Function]} = {}
+    private keysToEventHandler: {[Key: string]: [OnChangeCallback]} = {}
     private extensionId = "will-save@unregistered"
 
     constructor() {
@@ -135,7 +140,7 @@ class FirefoxBrowser implements Browser {
         })
     }
 
-    subscribeToChanges(key: string, onChange: Function) {
+    subscribeToChanges(key: string, onChange: OnChangeCallback) {
         let existingList = this.keysToEventHandler[key]
         if (existingList == undefined) {
             this.keysToEventHandler[key] = [onChange]
@@ -148,7 +153,7 @@ class FirefoxBrowser implements Browser {
         browser.runtime.sendMessage(this.extensionId, {key: key, val: obj})
     }
 
-    subscribe(key: string, callback: Function) {
+    subscribe(key: string, callback: BrowserSubscribeCallback) {
         browser.runtime.onMessage.addListener((request, sender) => {
             if (request.key == key) {
                 callback(request.val)
@@ -173,7 +178,7 @@ class FirefoxBrowser implements Browser {
         browser.runtime.sendMessage(this.extensionId, {updateCurrency: true})
     }
 
-    runOnFirstInstall(callback: Function) {
+    runOnFirstInstall(callback: () => void) {
         browser.runtime.onInstalled.addListener((details) => {
             callback()
         })

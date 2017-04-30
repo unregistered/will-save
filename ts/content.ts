@@ -28,7 +28,7 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
 } else {
     Logger.info("Bootstrapping other site watcher")
 
-    let runIfBlacklistSite = (callback: Function) => {
+    let runIfBlacklistSite = (callback: () => void) => {
         access.getBlockList((list) => {
             let regexes: RegExp[] = list.map((r) => new RegExp(r, 'i'))
             if (_.find(regexes, (r) => r.test(window.location.href))) {
@@ -37,7 +37,7 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
         })
     }
 
-    let runIfNoActiveSession = (callback: Function) => {
+    let runIfNoActiveSession = (callback: () => void) => {
         datastore.getData(DataKey.CURRENT_SESSION_VALID_UNTIL, (sessionTs) => {
             let now = new Date().getTime()
             if (now >= sessionTs) {

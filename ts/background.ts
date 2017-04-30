@@ -26,7 +26,7 @@ class CurrencyUpdater {
         }
     }
 
-    private doUpdate(callback: Function) {
+    private doUpdate(callback: () => void) {
         access.getDuolingoUsername((username) => {
             let api = new DuolingoAPI($, username)
 

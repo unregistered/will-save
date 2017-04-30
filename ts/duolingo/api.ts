@@ -4,7 +4,7 @@ import * as _ from 'lodash'
 let Logger = loglevel.getLogger('Duolingo API')
 
 export class DuolingoAPIResponse {
-    error: string
+    error?: string
     totalPoints: number
 }
 
@@ -15,7 +15,7 @@ export class DuolingoAPI {
         return "https://www.duolingo.com/users/" + this.username
     }
 
-    getData(onComplete: Function) {
+    getData(onComplete: (response: DuolingoAPIResponse) => void) {
         this.jQuery.getJSON(this.getEndpoint(), (data) => {
             Logger.debug(data)       
             onComplete({
