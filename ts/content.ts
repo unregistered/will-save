@@ -15,8 +15,6 @@ let access = new DatastoreAccess(datastore)
 let eventHub = new TypedEventHub(browser)
 
 if (/.*duolingo\.com/.test(window.location.hostname)) {
-    Logger.info("Bootstrapping Duolingo watcher")
-
     let watcher = new Watcher($)
 
     watcher.begin()
@@ -26,8 +24,6 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
         eventHub.requestCurrencyUpdate()
     })
 } else {
-    Logger.info("Bootstrapping other site watcher")
-
     let runIfBlacklistSite = (callback: () => void) => {
         access.getBlockList((list) => {
             let regexes: RegExp[] = list.map((r) => new RegExp(r, 'i'))
@@ -47,14 +43,25 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
     }
 
     runIfBlacklistSite(() => {
+        let startBlock = () => {
+            let url = browser.getUrl("html/toll.html")
+
+            $(document).ready(() => {
+                let frame = $('<iframe>', {src: url, id: 'will-save-ui'})
+                $('body').append(frame)
+            })
+        }
+
+        let endBlock = () => {
+            $('#will-save-ui').remove()
+        }
+
         let checkExpiration = () => {
             access.getMillisecondsToSessionExpiration((timeToGo) => {
                 if (timeToGo < 0) {
                     // There is no active session, bring the user to the blocked page
-                    Logger.info("No active session")
-                    let url = browser.getUrl("html/toll.html")
-                    let urlWithParams = url + "?r=" + encodeURIComponent(window.location.href)
-                    eventHub.requestRedirect(urlWithParams)
+                    Logger.info("No active session, Will-Save will block this page")
+                    startBlock()
                 } else {
                     // There is an active session but we want to end it later
                     Logger.info("Active session exists, sleep for", timeToGo)
@@ -64,5 +71,23 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
         }
 
         checkExpiration()
+
+        // If the user purchases time, we should unblock
+        datastore.subscribeToChanges(DataKey.CURRENT_SESSION_VALID_UNTIL, (newTime) => {
+            Logger.info("User spent potion on extra time")
+            let now = new Date().getTime()
+            if (now < newTime) {
+                Logger.debug("Unblock")
+
+                // We can unblock now
+                endBlock()
+
+                // But we'll want to re-check in a bit
+                let dt = newTime - now + 1000
+                Logger.debug("We will check again in", dt)
+                setTimeout(checkExpiration, dt)
+            }
+        })
+
     })
 }

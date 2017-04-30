@@ -17,16 +17,13 @@ let access = new DatastoreAccess(datastore)
 let eventHub = new TypedEventHub(browser)
 
 let query = url.parse(window.location.href).query
-let returnTo: string = querystring.parse(query)['r']
+let referrer: string = querystring.parse(query)['r']
 
 $(document).ready(() => {
     $('#pay').click((e) => {
         access.decrementCurrency(() => {
             // Give the user more time
-            access.giveDefaultTime(() => {
-                // Then redirect to the page
-                eventHub.requestRedirect(returnTo)
-            })
+            access.giveDefaultTime(() => {})
         }, () => {
             Logger.error("Not enough gems")
             alert("Not enough gems to spend!")
@@ -66,27 +63,12 @@ $(document).ready(() => {
         $('body').removeClass('hidden')
     })
 
-    // If the user purchases more time on another page, redirect them for free
-    datastore.subscribeToChanges(DataKey.CURRENT_SESSION_VALID_UNTIL, (newTime) => {
-        let now = new Date().getTime()
-        if (now < newTime) {
-            eventHub.requestRedirect(returnTo)
-        }
-    })
-
     access.getDefaultTime((minutes) => {
         $('#default-time').html(minutes.toString())
     })
 
-    let returnUrl = url.parse(returnTo)
+    let returnUrl = url.parse(referrer)
     $('#target-site').html(returnUrl.hostname)
 
     eventHub.requestCurrencyUpdate()
 })
-
-// Alter back behavior: since we redirected, we should skip the page which causes issues. This is useful
-// if the user comes to a blocked site through a search engine or link, we don't want to trap the user.
-history.pushState(null, null, document.URL)
-window.addEventListener('popstate', function () {
-    window.history.go(-2)
-});

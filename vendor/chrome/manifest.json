@@ -24,7 +24,7 @@
 
 	"content_scripts": [{
 		"run_at": "document_start",
-		"css": [],
+		"css": ["css/common.css"],
 		"js": [
 			"js/lib.js",
 			"js/content.js"
@@ -40,6 +40,7 @@
 
 	"web_accessible_resources": [
 		"img/*.png",
-		"js/*.js"
+		"js/*.js",
+		"html/toll.html"
 	]
 }
