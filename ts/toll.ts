@@ -16,9 +16,6 @@ let datastore = new TypedDatastore(browser)
 let access = new DatastoreAccess(datastore)
 let eventHub = new TypedEventHub(browser)
 
-let query = url.parse(window.location.href).query
-let referrer: string = querystring.parse(query)['r']
-
 $(document).ready(() => {
     $('#pay').click((e) => {
         access.decrementCurrency(() => {
@@ -67,8 +64,12 @@ $(document).ready(() => {
         $('#default-time').html(minutes.toString())
     })
 
-    let returnUrl = url.parse(referrer)
-    $('#target-site').html(returnUrl.hostname)
+    let query = url.parse(window.location.href).query
+    let referrer = querystring.parse(query)['r']
+    if (referrer) {
+        let returnUrl = url.parse(referrer)
+        $('#target-site').html(returnUrl.hostname)
+    }
 
     eventHub.requestCurrencyUpdate()
 })

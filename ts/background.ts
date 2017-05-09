@@ -13,15 +13,19 @@ loglevel.enableAll() // For debug
 let Logger = loglevel.getLogger('Background')
 
 class CurrencyUpdater {
-    private updating = false
+    private lastUpdatingTime = 0
 
     update() {
-        if (this.updating) {
+        let now = new Date().getTime()
+        let minimumMsBetweenChecks = 5000
+        if (this.lastUpdatingTime + minimumMsBetweenChecks > now) {
             Logger.info("Skip updating because we're currently updating")
         } else {
-            this.updating = true
+            Logger.info("Do an update because enough time has passed")
+            this.lastUpdatingTime = now
             this.doUpdate(() => {
-                this.updating = false
+                // Reset so that we can check again
+                this.lastUpdatingTime = 0
             })
         }
     }
@@ -34,11 +38,12 @@ class CurrencyUpdater {
                 if (data.error) {
                     Logger.error(data)
                 } else {
+                    Logger.info("Received API response", data)
                     access.getLastCheckPoints((oldPoints) => {
                         if (oldPoints > 0) {
                             let diff = data.totalPoints - oldPoints
                             let overflow = diff % 10
-                            let lessonsCompleted = diff / 10
+                            let lessonsCompleted = Math.floor(diff / 10)
 
                             Logger.info(data.totalPoints, oldPoints, diff, overflow, lessonsCompleted)
 
@@ -79,6 +84,7 @@ browser.runOnFirstInstall(() => {
 let eventHub = new TypedEventHub(browser)
 
 eventHub.onCurrencyUpdate(() => {
+    Logger.info("Received currency update request")
     currencyUpdater.update();
 })
 

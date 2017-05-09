@@ -43,7 +43,7 @@ export class DatastoreAccess {
     decrementCurrency(onSuccess: (newCurrency: number) => void, onFail: () => void) {
         this.store.getData<number>(DataKey.CURRENCY_COUNT, (currency) => {
             if (currency > 0) {
-                let newCurrency = currency - 1
+                let newCurrency = Math.floor(currency - 1)
                 this.store.setData(DataKey.CURRENCY_COUNT, newCurrency, () => {
                     onSuccess(newCurrency)
                 })

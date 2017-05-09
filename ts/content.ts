@@ -44,7 +44,7 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
 
     runIfBlacklistSite(() => {
         let startBlock = () => {
-            let url = browser.getUrl("html/toll.html")
+            let url = browser.getUrl("html/toll.html") + '?r=' + encodeURIComponent(window.location.href)
 
             $(document).ready(() => {
                 let frame = $('<iframe>', {src: url, id: 'will-save-ui'})

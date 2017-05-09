@@ -1,9 +1,9 @@
 {
 	"manifest_version": 2,
-	"name": "Will Save: Do Duolingo to use addictive sites",
+	"name": "Will Save: Duolingo Powered Site Blocker",
 	"short_name": "Will Save",
 	"description": "Blocks time wasting sites until Duolingo reviews are done.",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"incognito": "spanning",
 
 	"permissions": [
