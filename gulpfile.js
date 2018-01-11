@@ -92,7 +92,7 @@ gulp.task('chrome', ['bundle'], function() {
   );
 });
 
-gulp.task('firefox', function() {
+gulp.task('firefox', ['bundle'], function() {
   return es.merge(
     pipe('./build/artifacts/*.js', './build/firefox/js'),
     pipe('./img/**/*', './build/firefox/img'),
@@ -137,8 +137,8 @@ gulp.task('dist', function(cb) {
   return rseq('clean', ['chrome', 'firefox', 'safari'], ['chrome-dist', 'firefox-dist', 'safari-dist'], cb);
 });
 
-gulp.task('watch', ['clean', 'chrome'], function() {
-  gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['chrome']);
+gulp.task('watch', ['clean', 'firefox'], function() {
+  gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['firefox']);
 });
 
 gulp.task('run', function (cb) {
