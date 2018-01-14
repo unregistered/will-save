@@ -1,4 +1,3 @@
-import {Watcher, WatcherEvent} from "./duolingo/watcher"
 import * as $ from "jquery"
 import * as loglevel from 'loglevel'
 import {BrowserProvider} from "./browser/browser"
@@ -15,14 +14,7 @@ let access = new DatastoreAccess(datastore)
 let eventHub = new TypedEventHub(browser)
 
 if (/.*duolingo\.com/.test(window.location.hostname)) {
-    let watcher = new Watcher($)
-
-    watcher.begin()
-
-    watcher.on(WatcherEvent.PRACTICE_END, () => {
-        Logger.info("Lesson completed, user is credited with a gem")
-        eventHub.requestCurrencyUpdate()
-    })
+    // Don't block duolingo
 } else {
     let runIfBlacklistSite = (callback: () => void) => {
         access.getBlockList((list) => {

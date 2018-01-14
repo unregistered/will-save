@@ -30,7 +30,7 @@
 
 	"content_scripts": [{
 		"run_at": "document_start",
-		"css": [],
+		"css": ["css/common.css"],
 		"js": [
 			"js/lib.js",
 			"js/content.js"

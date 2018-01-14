@@ -1,4 +1,3 @@
-import {Watcher, WatcherEvent} from "./duolingo/watcher"
 import {DuolingoAPI, DuolingoAPIResponse} from "./duolingo/api"
 import * as $ from "jquery"
 import * as loglevel from 'loglevel'
