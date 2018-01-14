@@ -20,7 +20,12 @@ $(document).ready(() => {
     $('#pay').click((e) => {
         access.decrementCurrency(() => {
             // Give the user more time
-            access.giveDefaultTime(() => {})
+            access.giveDefaultTime(() => {
+                if (browser.getName() === 'Firefox') {
+                    // In firefox since this is a new tab, close this tab
+                    setTimeout(() => browser.closeCurrentTab(), 100)
+                }
+            })
         }, () => {
             Logger.error("Not enough gems")
             alert("Not enough gems to spend!")

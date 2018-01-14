@@ -91,3 +91,18 @@ eventHub.onCurrencyUpdate(() => {
 eventHub.onRedirect((url: string, tabId: number) => {
     browser.redirectTab(tabId, url)
 })
+
+let firefoxTollPagesLastOpened = -9999;
+const minimumSeparation = 2000;
+eventHub.onRequestNewTab((url) => {
+    const now = +new Date()
+    console.log(firefoxTollPagesLastOpened, now)
+
+    if (firefoxTollPagesLastOpened + minimumSeparation < now) {
+        console.log(firefoxTollPagesLastOpened, now)
+        browser.openTab(url)
+        firefoxTollPagesLastOpened = now;
+    } else {
+        console.log('Skip opening window for now since we recently opened a toll window')
+    }
+})

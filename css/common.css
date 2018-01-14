@@ -8,6 +8,12 @@
     width: 100%;
     margin: 0;
     padding: 0;
-    background: #000000;
+    background: #fff;
     z-index: 2147483647 !important;
+}
+
+#will-save-ui .fallback-text {
+    margin: 20% auto;
+    font-size: 18pt;
+    width: 400px;
 }

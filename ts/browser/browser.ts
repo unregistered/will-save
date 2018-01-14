@@ -5,8 +5,17 @@ export type OnWriteCallback = () => void;
 export type OnReadCallback = (items: {[keys: string]: any}) => void;
 export type OnChangeCallback = (newValue: any, oldValue?: any) => void;
 export type BrowserSubscribeCallback = (value: any, tabId?: number) => void;
+export type OnOpenTollInNewTabCallback = (url: string) => void;
+
+export type BrowserType = 'Chrome' | 'Firefox';
+
+function getTollPageUrl(browser: Browser) {
+    return browser.getUrl("html/toll.html") + '?r=' + encodeURIComponent(window.location.href)
+}
 
 export interface Browser {
+    getName(): BrowserType
+
     // Data APIs
     getUrl(url: string): string
     writeData(key: string, val: string, onWrite: () => void): void
@@ -19,6 +28,8 @@ export interface Browser {
 
     // Tabs
     redirectTab(tabId: number, url: string): void
+    closeCurrentTab(): void
+    openTab(url: string): void
 
     // Misc
     openOptionsPage(): void
@@ -30,6 +41,10 @@ class ChromeBrowser implements Browser {
 
     constructor() {
         this.startListeningForChanges()
+    }
+
+    getName(): BrowserType {
+        return "Chrome"
     }
 
     getUrl(url: string) {
@@ -84,6 +99,15 @@ class ChromeBrowser implements Browser {
         chrome.tabs.update(tabId, {url: url})
     }
 
+    openTab(url: string) {
+        console.log('No-op in chrome')
+        // NO-OP
+    }
+
+    closeCurrentTab() {
+        console.log('No-op in chrome')
+    }
+
     redirectTo(url) {
         chrome.runtime.sendMessage({redirect: url})
     }
@@ -109,6 +133,10 @@ class FirefoxBrowser implements Browser {
 
     constructor() {
         this.startListeningForChanges()
+    }
+
+    getName(): BrowserType {
+        return "Firefox"
     }
 
     getUrl(url: string): string {
@@ -166,6 +194,16 @@ class FirefoxBrowser implements Browser {
         browser.tabs.update(tabId, {url: url})
     }
 
+    openTab(url: string) {
+        browser.tabs.create({
+            url: url
+        })        
+    }
+
+    closeCurrentTab() {
+        browser.tabs.getCurrent().then(currentTab => browser.tabs.remove(<any>currentTab.id))
+    }
+
     redirectTo(url) {
         browser.runtime.sendMessage(this.extensionId, {redirect: url})
     }
@@ -187,7 +225,8 @@ class FirefoxBrowser implements Browser {
 
 export class BrowserProvider {
     static getBrowser(): Browser {
-        if (window.chrome) {
+        // getBrowserInfo is firefox only https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/getBrowserInfo
+        if (window.chrome && !('getBrowserInfo' in window.chrome.runtime)) {
             return new ChromeBrowser()
         }
 

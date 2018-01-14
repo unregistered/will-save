@@ -39,13 +39,41 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
             let url = browser.getUrl("html/toll.html") + '?r=' + encodeURIComponent(window.location.href)
 
             $(document).ready(() => {
-                let frame = $('<iframe>', {src: url, id: 'will-save-ui'})
-                $('body').append(frame)
+                if (browser.getName() === 'Chrome') {
+                    let e = $('<iframe>', {src: url, id: 'will-save-ui'})
+                    $('body').append(e)    
+                } else if (browser.getName() === 'Firefox') {
+                    const wrapper = $('<div>', {id: 'will-save-ui'})
+
+                    const msg = $('<div>', {class: 'fallback-text'})
+                    msg.html('Will-Save has blocked this page, until you use a Potion.<br/><small>(Refresh if it does not update)</small>')
+
+                    wrapper.append(msg);
+
+                    $('body').append(wrapper);
+
+                    eventHub.requestNewTab(url)
+                } else {
+                    throw new Error('Unrecognized Browser')
+                }
             })
         }
 
         let endBlock = () => {
+            console.log('Remove blocker:', $('#will-save-ui'))
             $('#will-save-ui').remove()
+        }
+
+        let endBlockIfNeeded = (now: number, newTime: number) => {
+            if (now < newTime) {
+                // We can unblock now
+                setTimeout(() => endBlock(), 100)
+
+                // But we'll want to re-check in a bit
+                let dt = newTime - now + 1000
+                Logger.debug("We will check again in", dt)
+                setTimeout(checkExpiration, dt)
+            }
         }
 
         let checkExpiration = () => {
@@ -68,18 +96,19 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
         datastore.subscribeToChanges(DataKey.CURRENT_SESSION_VALID_UNTIL, (newTime) => {
             Logger.info("User spent potion on extra time")
             let now = new Date().getTime()
-            if (now < newTime) {
-                Logger.debug("Unblock")
+            endBlockIfNeeded(now, newTime);
 
-                // We can unblock now
-                endBlock()
-
-                // But we'll want to re-check in a bit
-                let dt = newTime - now + 1000
-                Logger.debug("We will check again in", dt)
-                setTimeout(checkExpiration, dt)
-            }
+            // But we'll want to re-check in a bit
+            let dt = newTime - now + 1000
+            Logger.debug("We will check again in", dt)
+            setTimeout(checkExpiration, dt)
         })
 
+        // setInterval(() => {
+        //     datastore.getData(DataKey.CURRENT_SESSION_VALID_UNTIL, (newTime: number) => {
+        //         let now = new Date().getTime()
+        //         endBlockIfNeeded(now, newTime);
+        //     })
+        // }, 2000);
     })
 }
