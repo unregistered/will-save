@@ -3,7 +3,7 @@
 	"name": "Will Save: Duolingo Powered Site Blocker",
 	"short_name": "Will Save",
 	"description": "Blocks time wasting sites until Duolingo reviews are done.",
-	"version": "1.0.2",
+	"version": "1.1.1",
 	"incognito": "spanning",
 
 	"permissions": [

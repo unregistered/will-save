@@ -31,6 +31,8 @@ Which produces chrome/firefox extension folders.
 
 For submission to mozilla AMO, select all files in the firefox folder and zip them.
 
+For submission to chrome webstore, select chorme folder and zip the entire folder.
+
 ## Credits
 
 Original gulpfile/project structure: Copyright (MIT) info@likastore.com https://github.com/likeastore/browser-extension
