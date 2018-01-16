@@ -39,6 +39,7 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
             let url = browser.getUrl("html/toll.html") + '?r=' + encodeURIComponent(window.location.href)
 
             $(document).ready(() => {
+                console.info('Will-Save will block this page')
                 if (browser.getName() === 'Chrome') {
                     let e = $('<iframe>', {src: url, id: 'will-save-ui'})
                     $('body').append(e)    

@@ -137,8 +137,12 @@ gulp.task('dist', function(cb) {
   return rseq('clean', ['chrome', 'firefox', 'safari'], ['chrome-dist', 'firefox-dist', 'safari-dist'], cb);
 });
 
-gulp.task('watch', ['clean', 'firefox'], function() {
+gulp.task('watch-firefox', ['clean', 'firefox'], function() {
   gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['firefox']);
+});
+
+gulp.task('watch-chrome', ['clean', 'chrome'], function() {
+  gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['chrome']);
 });
 
 gulp.task('run', function (cb) {
