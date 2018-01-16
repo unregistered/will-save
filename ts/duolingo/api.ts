@@ -26,7 +26,7 @@ export class DuolingoAPI {
 
             let getErr = () => {
                 if (jqxhr.status == 404) {
-                    return "User not found, check your Duolingo username and try again"
+                    return "Page Status 404: not found"
                 } else {
                     return textStatus
                 }

@@ -60,9 +60,9 @@ let stopSaveAnimation = () => {
     }, 1000)
 }
 
-let updateDuolingoLinkStatus = (text) => {
-    let checkbox = $('<i/>', {class: 'glyphicon glyphicon-ok'})
-    $('#duolingo-link-status').html('').append(checkbox).append(" ").append(text)
+let updateDuolingoLinkStatus = (text: string, icon: string) => {
+    let icn = $('<i/>', {class: `glyphicon glyphicon-${icon}`})
+    $('#duolingo-link-status').html('').append(icn).append(" ").append(text)
 }
 
 $(document).ready(() => {
@@ -122,14 +122,15 @@ $(document).ready(() => {
                         Logger.info("Set new duolingo username", newUsername, "Base points", data.totalPoints)
                         access.setDuolingoUsernameAndInitializeInventory(newUsername, data.totalPoints)
 
-                        updateDuolingoLinkStatus(`User <a href="https://www.duolingo.com/${newUsername}">${newUsername}</a> has ${data.totalPoints} total EXP.`)
+                        updateDuolingoLinkStatus(`User now set to <a href="https://www.duolingo.com/${newUsername}">${newUsername}</a>, who has ${data.totalPoints} total EXP.<br/><br/>Try visiting a site on your blocklist!`, 'ok')
                     } else {
-                        alert(data.error)
+                        updateDuolingoLinkStatus(`Username was not found. Please double-check your username (and make sure it's not your e-mail address).<br/><small>Details: ${data.error}</small>`, 'remove')
                     }
 
                     stopSaveAnimation()
                 })
             } else {
+                updateDuolingoLinkStatus(`The username is still set to ${oldUsername}`, 'ok')
                 stopSaveAnimation()
             }
         })
