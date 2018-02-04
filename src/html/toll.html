@@ -145,7 +145,20 @@
 
     <div class="row">
       <div class="col-md-12">
-        <a class="btn btn-primary btn-lg" id="pay">Drink One Potion</a>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary btn-lg" id="pay">Drink One Potion</button>
+          <button type="button" class="btn btn-primary btn-lg dropdown-toggle" id="pay-options" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#" id="pay-custom">Drink Custom Amount</a>
+            </li>
+          </ul>
+        </div>
+
         <a class="btn btn-success btn-lg" id="mine">Brew Potion (Open Duolingo)</a>
         <a class="btn btn-default pull-right btn-lg" id="options">
           <i class="glyphicon glyphicon-cog"></i>

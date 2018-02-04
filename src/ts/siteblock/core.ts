@@ -51,10 +51,10 @@ export class DatastoreAccess {
     });
   }
 
-  decrementCurrency(onSuccess: (newCurrency: number) => void, onFail: () => void) {
+  decrementCurrency(amount: number, onSuccess: (newCurrency: number) => void, onFail: () => void) {
     this.store.getData<number>(DataKey.CURRENCY_COUNT, currency => {
-      if (currency > 0) {
-        let newCurrency = Math.floor(currency - 1);
+      if (currency >= amount) {
+        let newCurrency = Math.floor(currency - amount);
         this.store.setData(DataKey.CURRENCY_COUNT, newCurrency, () => {
           onSuccess(newCurrency);
         });
@@ -92,6 +92,14 @@ export class DatastoreAccess {
       this.store.setData(DataKey.CURRENT_SESSION_VALID_UNTIL, now + timeToAdd, () => {
         onComplete();
       });
+    });
+  }
+
+  giveCustomTime(milliseconds: number, onComplete: () => void) {
+    let now = new Date().getTime();
+    let timeToAdd = milliseconds;
+    this.store.setData(DataKey.CURRENT_SESSION_VALID_UNTIL, now + timeToAdd, () => {
+      onComplete();
     });
   }
 

@@ -106,3 +106,17 @@ eventHub.onRequestNewTab(url => {
     console.log('Skip opening window for now since we recently opened a toll window');
   }
 });
+
+// Debugging API
+(<any>window).givePotions = (potions: number | undefined) => {
+  const potionsCount = potions || 1;
+  access.incrementCurrency(potionsCount, () => {
+    console.log('Granted potions', potionsCount);
+  });
+};
+
+(<any>window).giveTime = (timeMs: number) => {
+  access.giveCustomTime(timeMs, () => {
+    console.log('Granted time', timeMs);
+  });
+};

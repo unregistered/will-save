@@ -17,23 +17,34 @@ let access = new DatastoreAccess(datastore);
 let eventHub = new TypedEventHub(browser);
 
 $(document).ready(() => {
+  const setPayButtonEnabled = (enabled: boolean) => {
+    if (enabled) {
+      $('#pay').removeAttr('disabled');
+      $('#pay-options').removeAttr('disabled');
+    } else {
+      $('#pay').attr('disabled', 'true');
+      $('#pay-options').attr('disabled', 'true');
+    }
+  };
+
   const updateCurrencyUI = (currency: number) => {
     let currencyAsString: string = currency.toString();
     $('#gemcount').html('x' + currencyAsString);
 
     if (currency <= 0) {
-      $('#pay').attr('disabled', 'true');
+      setPayButtonEnabled(false);
       $('.hide-when-no-potions').hide();
       $('.hide-when-potions').show();
     } else {
-      $('#pay').removeAttr('disabled');
+      setPayButtonEnabled(true);
       $('.hide-when-potions').hide();
       $('.hide-when-no-potions').show();
     }
   };
 
-  $('#pay').click(e => {
+  function spendCurrency(amount: number) {
     access.decrementCurrency(
+      amount,
       () => {
         // Give the user more time
         access.giveDefaultTime(() => {
@@ -48,6 +59,29 @@ $(document).ready(() => {
         alert('Not enough gems to spend!');
       }
     );
+  }
+
+  $('#pay').click(e => spendCurrency(1));
+
+  $('#pay-custom').click(e => {
+    const amount = prompt('How many potions do you want to drink?');
+    const amountAsNumber = Number(amount);
+    console.log('Read amount:', amountAsNumber);
+
+    if (isNaN(amountAsNumber)) {
+      return alert('Not a valid number: ' + amountAsNumber);
+    }
+
+    const isInteger = amountAsNumber % 1 === 0;
+    if (!isInteger) {
+      return alert('Enter a whole number. Given: ' + amountAsNumber);
+    }
+
+    if (amountAsNumber <= 0) {
+      return alert('Enter a number greater than 0. Given: ' + amountAsNumber);
+    }
+
+    spendCurrency(amountAsNumber);
   });
 
   $('#mine').click(e => {
