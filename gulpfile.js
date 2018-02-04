@@ -1,20 +1,20 @@
-var gulp       = require('gulp');
-var clean      = require('gulp-clean');
-var es         = require('event-stream');
-var fs         = require('fs');
-var rseq       = require('gulp-run-sequence');
-var zip        = require('gulp-zip');
-var shell      = require('gulp-shell');
-var chrome     = require('./vendor/chrome/manifest');
-var firefox    = require('./vendor/firefox/manifest');
+var gulp = require('gulp');
+var clean = require('gulp-clean');
+var es = require('event-stream');
+var fs = require('fs');
+var rseq = require('gulp-run-sequence');
+var zip = require('gulp-zip');
+var shell = require('gulp-shell');
+var chrome = require('./vendor/chrome/manifest');
+var firefox = require('./vendor/firefox/manifest');
 var browserify = require('browserify');
-var gutil      = require("gulp-util");
-var tsify      = require("tsify");
-var factor     = require('factor-bundle');
-var source     = require('vinyl-source-stream');
-var buffer     = require('vinyl-buffer');
-var merge      = require('multistream-merge');
-var uglify     = require('gulp-uglify');
+var gutil = require('gulp-util');
+var tsify = require('tsify');
+var factor = require('factor-bundle');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var merge = require('multistream-merge');
+var uglify = require('gulp-uglify');
 
 function pipe(src, transforms, dest) {
   if (typeof transforms === 'string') {
@@ -23,9 +23,10 @@ function pipe(src, transforms, dest) {
   }
 
   var stream = gulp.src(src);
-  transforms && transforms.forEach(function(transform) {
-    stream = stream.pipe(transform);
-  });
+  transforms &&
+    transforms.forEach(function(transform) {
+      stream = stream.pipe(transform);
+    });
 
   if (dest) {
     stream = stream.pipe(gulp.dest(dest));
@@ -35,39 +36,39 @@ function pipe(src, transforms, dest) {
 }
 
 function bundle(debugMode) {
-  var TS_SOURCE_DIR = "./ts/"
-  var BUILD_DEST_DIR = "./build/artifacts/"
+  var TS_SOURCE_DIR = './ts/';
+  var BUILD_DEST_DIR = './build/artifacts/';
 
-  var srcFileNames = fs.readdirSync(TS_SOURCE_DIR).filter((e) => /\.ts$/.test(e))
-  var srcFilePaths = srcFileNames.map((fname) => TS_SOURCE_DIR + fname)
-  var destFileNames = srcFileNames.map((fname) => fname.replace(/\.ts$/, '.js'))
+  var srcFileNames = fs.readdirSync(TS_SOURCE_DIR).filter(e => /\.ts$/.test(e));
+  var srcFilePaths = srcFileNames.map(fname => TS_SOURCE_DIR + fname);
+  var destFileNames = srcFileNames.map(fname => fname.replace(/\.ts$/, '.js'));
 
-  var destStreams = destFileNames.map((f) => source(f))
+  var destStreams = destFileNames.map(f => source(f));
 
   var b = browserify({
     entries: srcFilePaths,
     debug: debugMode,
     // Any packages that don't use require() can be added here for a speed boost
-    noParse: ['jquery', 'lodash'].map((p) => require.resolve(p)),
+    noParse: ['jquery', 'lodash'].map(p => require.resolve(p)),
     cache: {},
     packageCache: {}
-  })
+  });
 
-  var commonStream = b.plugin(tsify)
-    .plugin('factor-bundle', {o: destStreams})
+  var commonStream = b
+    .plugin(tsify)
+    .plugin('factor-bundle', { o: destStreams })
     .bundle()
     .pipe(source('lib.js'))
-    .on('error', gutil.log.bind(gutil, "Browserify Error"))
-    .on('log', gutil.log.bind(gutil, "Browserify Log"))
+    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+    .on('log', gutil.log.bind(gutil, 'Browserify Log'));
 
-  var stream = merge.obj(destStreams.concat(commonStream))
-    .pipe(buffer())
-  
+  var stream = merge.obj(destStreams.concat(commonStream)).pipe(buffer());
+
   if (!debugMode) {
-    stream = stream.pipe(uglify())
+    stream = stream.pipe(uglify());
   }
 
-  return stream.pipe(gulp.dest(BUILD_DEST_DIR))
+  return stream.pipe(gulp.dest(BUILD_DEST_DIR));
 }
 
 gulp.task('clean', function() {
@@ -113,25 +114,25 @@ gulp.task('safari', function() {
   );
 });
 
-gulp.task('chrome-dist', function () {
-  gulp.src('./build/chrome/**/*')
+gulp.task('chrome-dist', function() {
+  gulp
+    .src('./build/chrome/**/*')
     .pipe(zip('chrome-extension-' + chrome.version + '.zip'))
     .pipe(gulp.dest('./dist/chrome'));
 });
 
-gulp.task('firefox-dist', function () {
-  gulp.src('./build/firefox/**/*')
+gulp.task('firefox-dist', function() {
+  gulp
+    .src('./build/firefox/**/*')
     .pipe(zip('firefox-extension-' + firefox.version + '.zip'))
     .pipe(gulp.dest('./dist/chrome'));
 });
 
-gulp.task('safari-dist', function () {
+gulp.task('safari-dist', function() {
   pipe('./vendor/safari/Update.plist', './dist/safari');
 });
 
-gulp.task('firefox-run', shell.task([
-  'cd ./build/firefox && ../../tools/addon-sdk-1.16/bin/cfx run',
-]));
+gulp.task('firefox-run', shell.task(['cd ./build/firefox && ../../tools/addon-sdk-1.16/bin/cfx run']));
 
 gulp.task('dist', function(cb) {
   return rseq('clean', ['chrome', 'firefox', 'safari'], ['chrome-dist', 'firefox-dist', 'safari-dist'], cb);
@@ -145,13 +146,11 @@ gulp.task('watch-chrome', ['clean', 'chrome'], function() {
   gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['chrome']);
 });
 
-gulp.task('run', function (cb) {
+gulp.task('run', function(cb) {
   return rseq('firefox', 'firefox-run', cb);
 });
 
-gulp.task('addons', shell.task([
-  'cp -R ./dist ../addons'
-]));
+gulp.task('addons', shell.task(['cp -R ./dist ../addons']));
 
 gulp.task('default', function(cb) {
   return rseq('clean', ['chrome', 'firefox', 'safari'], cb);

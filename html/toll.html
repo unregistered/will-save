@@ -1,154 +1,168 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Toll Page</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <title>Toll Page</title>
 
-    <!-- Custom styles for this template -->
-    <style>
-        /* Sticky footer styles
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+
+  <!-- Custom styles for this template -->
+  <style>
+    /* Sticky footer styles
         -------------------------------------------------- */
-        html {
-        position: relative;
-        min-height: 100%;
-        }
-        body {
-        /* Margin bottom by footer height */
-        margin-bottom: 60px;
-        }
-        .footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        /* Set the fixed height of the footer here */
-        height: 60px;
-        background-color: #f5f5f5;
-        }
+
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+
+    body {
+      /* Margin bottom by footer height */
+      margin-bottom: 60px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      /* Set the fixed height of the footer here */
+      height: 60px;
+      background-color: #f5f5f5;
+    }
 
 
-        /* Custom page CSS
+    /* Custom page CSS
         -------------------------------------------------- */
-        /* Not required for template or sticky footer method. */
 
-        .container {
-        width: auto;
-        max-width: 680px;
-        padding: 0 15px;
-        }
-        .container .text-muted {
-        margin: 20px 0;
-        }
+    /* Not required for template or sticky footer method. */
 
-        #target-site {
-          font-weight: bold;
-        }
+    .container {
+      width: auto;
+      max-width: 680px;
+      padding: 0 15px;
+    }
 
-        .item {
-          display: block;
-          width: 128px;
-          height: 128px;
-          border: 1px solid #999;
-          border-radius: 10px;
-          position: relative;
-        }
+    .container .text-muted {
+      margin: 20px 0;
+    }
 
-        .item h5 {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          text-align: center;
-        }
+    #target-site {
+      font-weight: bold;
+    }
 
-        .item .itemcount {
-          position: absolute;
-          top: 10px;
-          left: 10px;
-          font-size: 14pt;
-        }
+    .item {
+      display: block;
+      width: 128px;
+      height: 128px;
+      border: 1px solid #999;
+      border-radius: 10px;
+      position: relative;
+    }
 
-        .item img {
-          width: 96px;
-          height: 96px;
-          margin: 0 auto;
-        }
+    .item h5 {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
 
-        .help {
-          font-size: 13pt;
-        }
+    .item .itemcount {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 14pt;
+    }
 
-        .item-name {
-          font-weight: bold;
-          color: #679AD1;
-          font-size: 12pt;
-        }
+    .item img {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto;
+    }
 
-        #inventory {
-          margin-top: 30px;
-          margin-bottom: 30px;
-        }
-    </style>
-  </head>
+    .help {
+      font-size: 13pt;
+    }
 
-  <body class="hidden">
-    <!-- Begin page content -->
-    <div class="container">
-      <div class="page-header">
-        <h1>Hold Up There Traveler!</h1>
-      </div>
-      <p class="help">The domain <span id="target-site"></span> is in an <strong>unstable time-sphere</strong>, causing time to pass faster. It's only safe to browse if you drink a <span class="item-name">Potion of Will</span>!</p>
+    .item-name {
+      font-weight: bold;
+      color: #679AD1;
+      font-size: 12pt;
+    }
 
-      <p class="help hide-when-no-potions">Each potion you drink will allow you to browse freely for <span id="default-time"></span> minutes.</p>
-      <p class="help hide-when-potions">You're all out of potions! Each time you complete 10XP (one lesson or review) in Duolingo, you'll get a <span class="item-name">Potion of Will</span>.</p>
+    #inventory {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
 
-      <div class="panel panel-default" id="inventory">
-        <div class="panel-heading">
-          <h3 class="panel-title">
-            Inventory
-            <a class="btn btn-default btn-xs pull-right" id="refresh-inventory">
-              <i class="glyphicon glyphicon-refresh"></i>
-              Refresh
-            </a>    
-          </h3>
-        </div>
-        <div class="panel-body">
-          <div class="item">
-            <span class="itemcount" id="gemcount">x00</span>
-            <img class="media-object" src="../img/potion_full.png" width="32px" alt="potion-icon"/>
-            <h5><span class="item-name">Potion of Will</span></h5>
-          </div>
-        </div>
-      </div>
+<body class="hidden">
+  <!-- Begin page content -->
+  <div class="container">
+    <div class="page-header">
+      <h1>Hold Up There Traveler!</h1>
+    </div>
+    <p class="help">The domain
+      <span id="target-site"></span> is in an
+      <strong>unstable time-sphere</strong>, causing time to pass faster. It's only safe to browse if you drink a
+      <span class="item-name">Potion of Will</span>!</p>
 
+    <p class="help hide-when-no-potions">Each potion you drink will allow you to browse freely for
+      <span id="default-time"></span> minutes.</p>
+    <p class="help hide-when-potions">You're all out of potions! Each time you complete 10XP (one lesson or review) in Duolingo, you'll get a
+      <span class="item-name">Potion of Will</span>.</p>
 
-      <div class="row">
-        <div class="col-md-12">
-          <a class="btn btn-primary btn-lg" id="pay">Drink One Potion</a>
-          <a class="btn btn-success btn-lg" id="mine">Brew Potion (Open Duolingo)</a>
-          <a class="btn btn-default pull-right btn-lg" id="options">
-            <i class="glyphicon glyphicon-cog"></i>
+    <div class="panel panel-default" id="inventory">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Inventory
+          <a class="btn btn-default btn-xs pull-right" id="refresh-inventory">
+            <i class="glyphicon glyphicon-refresh"></i>
+            Refresh
           </a>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <div class="item">
+          <span class="itemcount" id="gemcount">x00</span>
+          <img class="media-object" src="../img/potion_full.png" width="32px" alt="potion-icon" />
+          <h5>
+            <span class="item-name">Potion of Will</span>
+          </h5>
         </div>
       </div>
     </div>
 
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted"></p>
-      </div>
-    </footer>
 
-    <script src="../js/lib.js"></script>
-    <script src="../js/toll.js"></script>
-  </body>
+    <div class="row">
+      <div class="col-md-12">
+        <a class="btn btn-primary btn-lg" id="pay">Drink One Potion</a>
+        <a class="btn btn-success btn-lg" id="mine">Brew Potion (Open Duolingo)</a>
+        <a class="btn btn-default pull-right btn-lg" id="options">
+          <i class="glyphicon glyphicon-cog"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="text-muted"></p>
+    </div>
+  </footer>
+
+  <script src="../js/lib.js"></script>
+  <script src="../js/toll.js"></script>
+</body>
+
 </html>

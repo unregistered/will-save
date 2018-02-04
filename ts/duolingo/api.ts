@@ -1,57 +1,59 @@
-import * as loglevel from 'loglevel'
-import * as _ from 'lodash'
+import * as loglevel from 'loglevel';
+import * as _ from 'lodash';
 
-let Logger = loglevel.getLogger('Duolingo API')
+let Logger = loglevel.getLogger('Duolingo API');
 
 export class DuolingoAPIResponse {
-    error?: string
-    totalPoints: number
+  error?: string;
+  totalPoints: number;
 }
 
 export class DuolingoAPI {
-    constructor(private jQuery: JQueryStatic, private username: string) {}
+  constructor(private jQuery: JQueryStatic, private username: string) {}
 
-    getEndpoint(): string {
-        return "https://www.duolingo.com/users/" + this.username
-    }
+  getEndpoint(): string {
+    return 'https://www.duolingo.com/users/' + this.username;
+  }
 
-    getData(onComplete: (response: DuolingoAPIResponse) => void) {
-        this.jQuery.getJSON(this.getEndpoint(), (data) => {
-            Logger.debug(data)       
-            onComplete({
-                totalPoints: _.sum(this.extractLanguagePoints(data))
-            })
-        }).fail((jqxhr: JQueryXHR, textStatus, error) => {
-            Logger.error(jqxhr, textStatus, error)
+  getData(onComplete: (response: DuolingoAPIResponse) => void) {
+    this.jQuery
+      .getJSON(this.getEndpoint(), data => {
+        Logger.debug(data);
+        onComplete({
+          totalPoints: _.sum(this.extractLanguagePoints(data))
+        });
+      })
+      .fail((jqxhr: JQueryXHR, textStatus, error) => {
+        Logger.error(jqxhr, textStatus, error);
 
-            let getErr = () => {
-                if (jqxhr.status == 404) {
-                    return "Page Status 404: not found"
-                } else {
-                    return textStatus
-                }
-            }
+        let getErr = () => {
+          if (jqxhr.status == 404) {
+            return 'Page Status 404: not found';
+          } else {
+            return textStatus;
+          }
+        };
 
-            onComplete({
-                error: getErr(),
-                totalPoints: -1
-            })
-        })
-    }
+        onComplete({
+          error: getErr(),
+          totalPoints: -1
+        });
+      });
+  }
 
-    private extractLanguagePoints(data): number[] {
-        if (data.languages == undefined) {
-            Logger.error("Unexpected API response:", data)
-            return []
+  private extractLanguagePoints(data): number[] {
+    if (data.languages == undefined) {
+      Logger.error('Unexpected API response:', data);
+      return [];
+    } else {
+      return data.languages.map(l => {
+        if (l.points != undefined) {
+          return l.points;
         } else {
-            return data.languages.map((l) => {
-                if (l.points != undefined) {
-                    return l.points
-                } else {
-                    Logger.error("Language missing points", l)
-                    return 0
-                }
-            })
+          Logger.error('Language missing points', l);
+          return 0;
         }
+      });
     }
+  }
 }

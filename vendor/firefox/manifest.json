@@ -1,51 +1,41 @@
 {
-	"manifest_version": 2,
-	"name": "Will Save: Duolingo Powered Site Blocker",
-	"description": "Blocks time wasting sites until Duolingo reviews are done.",
-	"version": "1.1.2",
-	"incognito": "spanning",
+  "manifest_version": 2,
+  "name": "Will Save: Duolingo Powered Site Blocker",
+  "description": "Blocks time wasting sites until Duolingo reviews are done.",
+  "version": "1.1.2",
+  "incognito": "spanning",
 
-    "applications": {
-        "gecko": {
-            "id": "will-save@unregistered",
-            "strict_min_version": "48.0"
-        }
-    },
+  "applications": {
+    "gecko": {
+      "id": "will-save@unregistered",
+      "strict_min_version": "48.0"
+    }
+  },
 
-	"permissions": [
-		"tabs",
-		"storage",
-		"*://www.duolingo.com/*"
-	],
+  "permissions": ["tabs", "storage", "*://www.duolingo.com/*"],
 
-	"options_ui": {
-		"page": "html/options.html",
-		"open_in_tab": false
-	},
+  "options_ui": {
+    "page": "html/options.html",
+    "open_in_tab": false
+  },
 
-	"background": {
-		"scripts": ["js/lib.js", "js/background.js"],
-		"persistent": false
-	},
+  "background": {
+    "scripts": ["js/lib.js", "js/background.js"],
+    "persistent": false
+  },
 
-	"content_scripts": [{
-		"run_at": "document_start",
-		"css": ["css/common.css"],
-		"js": [
-			"js/lib.js",
-			"js/content.js"
-		],
-		"matches": [
-			"<all_urls>"
-		]
-	}],
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "css": ["css/common.css"],
+      "js": ["js/lib.js", "js/content.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
 
-	"icons" : {
-		"512" : "img/logos_512.png"
-	},
+  "icons": {
+    "512": "img/logos_512.png"
+  },
 
-	"web_accessible_resources": [
-		"img/*.png",
-		"js/*.js"
-	]
+  "web_accessible_resources": ["img/*.png", "js/*.js"]
 }
