@@ -103,6 +103,12 @@ $(document).ready(() => {
     });
   });
 
+  $('.outbound-link').click(e => {
+    const href = $(e.target).attr('data-href');
+    console.log('Outbound link to', href);
+    eventHub.requestRedirect(href);
+  });
+
   // If the user hasn't setup yet, take them to setup
   access.getDuolingoUsername(uname => {
     if (uname == '') {
