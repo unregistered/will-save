@@ -89,6 +89,7 @@ gulp.task('chrome', ['bundle'], function() {
     pipe('./src/img/**/*', './build/chrome/img'),
     pipe('./src/css/**/*', './build/chrome/css'),
     pipe('./src/html/**/*', './build/chrome/html'),
+    pipe('./vendor/**/*', './build/chrome/vendor'),
     pipe('./src/browser/chrome/manifest.json', './build/chrome/')
   );
 });
@@ -99,6 +100,7 @@ gulp.task('firefox', ['bundle'], function() {
     pipe('./src/img/**/*', './build/firefox/img'),
     pipe('./src/css/**/*', './build/firefox/css'),
     pipe('./src/html/**/*', './build/firefox/html'),
+    pipe('./vendor/**/*', './build/firefox/vendor'),
     pipe('./src/browser/firefox/manifest.json', './build/firefox/')
   );
 });

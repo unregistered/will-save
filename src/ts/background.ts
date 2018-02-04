@@ -1,6 +1,6 @@
 import { Browser, BrowserProvider } from './browser/browser';
 import { DuolingoAPI, DuolingoAPIResponse } from './duolingo/api';
-import * as $ from 'jquery';
+import { $ } from './dom/jquery';
 import { TypedDatastore, DataKey, DatastoreAccess } from './siteblock/core';
 import * as loglevel from 'loglevel';
 import { TypedEventHub } from './siteblock/events';

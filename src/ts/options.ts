@@ -1,5 +1,5 @@
 import { DuolingoAPI, DuolingoAPIResponse } from './duolingo/api';
-import * as $ from 'jquery';
+import { $ } from './dom/jquery';
 import * as loglevel from 'loglevel';
 import * as _ from 'lodash';
 import { BrowserProvider } from './browser/browser';

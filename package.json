@@ -49,6 +49,6 @@
   "scripts": {
     "build": "gulp chrome firefox",
     "dist": "gulp chrome-dist firefox-dist",
-    "watch": "gulp watch-firefox"
+    "watch": "gulp watch-chrome"
   }
 }

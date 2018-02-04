@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import { $ } from './dom/jquery';
 import * as loglevel from 'loglevel';
 import { BrowserProvider } from './browser/browser';
 import { TypedDatastore, DataKey, DatastoreAccess } from './siteblock/core';

@@ -1,5 +1,5 @@
 import { BrowserProvider } from './browser/browser';
-import * as $ from 'jquery';
+import { $ } from './dom/jquery';
 import * as loglevel from 'loglevel';
 import { TypedDatastore, DataKey, DatastoreAccess } from './siteblock/core';
 import { TypedEventHub } from './siteblock/events';
