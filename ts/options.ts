@@ -113,6 +113,13 @@ $(document).ready(() => {
         access.getDuolingoUsername((oldUsername) => {
             let rawFieldUsername = duoUsername;
             let newUsername = $.trim(rawFieldUsername)
+
+            if (!newUsername) {
+                updateDuolingoLinkStatus('Enter your duolingo username', 'exclamation-sign');
+                stopSaveAnimation();
+                return;
+            }
+
             if (oldUsername != newUsername) {
                 // Get new username info
                 let api = new DuolingoAPI($, newUsername)
