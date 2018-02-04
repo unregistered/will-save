@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import * as url from 'url';
 import * as querystring from 'querystring';
 import { DuolingoAPI, DuolingoAPIResponse } from './duolingo/api';
+import * as Mousetrap from 'mousetrap';
 
 loglevel.enableAll(); // For debug
 let Logger = loglevel.getLogger('Bootstrap');
@@ -63,6 +64,11 @@ $(document).ready(() => {
 
   $('#pay').click(e => spendCurrency(1));
 
+  // Keyboard shortcut to spend currency
+  Mousetrap.bind('enter', () => {
+    spendCurrency(1);
+  });
+
   $('#pay-custom').click(e => {
     const amount = prompt('How many potions do you want to drink?');
     const amountAsNumber = Number(amount);
@@ -103,6 +109,7 @@ $(document).ready(() => {
     });
   });
 
+  // Support arbitrary links on the page that wouldn't work in an iframe otherwise
   $('.outbound-link').click(e => {
     const href = $(e.target).attr('data-href');
     console.log('Outbound link to', href);
