@@ -17,6 +17,21 @@ let access = new DatastoreAccess(datastore)
 let eventHub = new TypedEventHub(browser)
 
 $(document).ready(() => {
+    const updateCurrencyUI = (currency: number) => {
+        let currencyAsString: string = (currency).toString()
+        $('#gemcount').html("x" + currencyAsString)
+
+        if (currency <= 0) {
+            $('#pay').attr('disabled', 'true')
+            $('.hide-when-no-potions').hide()
+            $('.hide-when-potions').show()
+        } else {
+            $('#pay').removeAttr('disabled')
+            $('.hide-when-potions').hide()
+            $('.hide-when-no-potions').show()
+        }
+    }
+
     $('#pay').click((e) => {
         access.decrementCurrency(() => {
             // Give the user more time
@@ -40,6 +55,17 @@ $(document).ready(() => {
         browser.openOptionsPage()
     })
 
+    $('#refresh-inventory').click((e) => {
+        // Kick one off just in case
+        eventHub.requestCurrencyUpdate()
+
+        // Simultaneously update in case too
+        access.getCurrency((currency: number) => {
+            console.log('Update currency', currency)
+            updateCurrencyUI(currency)
+        })
+    })
+
     // If the user hasn't setup yet, take them to setup
     access.getDuolingoUsername((uname) => {
         if (uname == '') {
@@ -49,18 +75,8 @@ $(document).ready(() => {
 
     access.getAndSubscribeToCurrency((currency: number) => {
         Logger.info("Read currency from store:", currency)
-        let currencyAsString: string = (currency).toString()
-        $('#gemcount').html("x" + currencyAsString)
 
-        if (currency <= 0) {
-            $('#pay').attr('disabled', 'true')
-            $('.hide-when-no-potions').hide()
-            $('.hide-when-potions').show()
-        } else {
-            $('#pay').removeAttr('disabled')
-            $('.hide-when-potions').hide()
-            $('.hide-when-no-potions').show()
-        }
+        updateCurrencyUI(currency);
 
         $('body').removeClass('hidden')
     })

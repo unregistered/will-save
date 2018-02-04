@@ -60,6 +60,12 @@ export class DatastoreAccess {
         }, 0)
     }
 
+    getCurrency(withCurrency: OnChangeCallback) {
+        this.store.getData<number>(DataKey.CURRENCY_COUNT, (currency) => {
+            withCurrency(currency)
+        }, 0)
+    }
+
     giveDefaultTime(onComplete: () => void) {
         this.getDefaultTime((minutes) => {
             let now = new Date().getTime()
