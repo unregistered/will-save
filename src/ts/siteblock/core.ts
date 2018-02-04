@@ -1,4 +1,4 @@
-/// <reference path="../../node_modules/@types/node/index.d.ts" />
+/// <reference path="../../../node_modules/@types/node/index.d.ts" />
 import * as events from 'events';
 import { Browser, OnReadCallback, OnWriteCallback, OnChangeCallback } from '../browser/browser';
 

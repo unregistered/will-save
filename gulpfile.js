@@ -5,8 +5,8 @@ var fs = require('fs');
 var rseq = require('gulp-run-sequence');
 var zip = require('gulp-zip');
 var shell = require('gulp-shell');
-var chrome = require('./vendor/chrome/manifest');
-var firefox = require('./vendor/firefox/manifest');
+var chrome = require('./src/browser/chrome/manifest');
+var firefox = require('./src/browser/firefox/manifest');
 var browserify = require('browserify');
 var gutil = require('gulp-util');
 var tsify = require('tsify');
@@ -36,7 +36,7 @@ function pipe(src, transforms, dest) {
 }
 
 function bundle(debugMode) {
-  var TS_SOURCE_DIR = './ts/';
+  var TS_SOURCE_DIR = './src/ts/';
   var BUILD_DEST_DIR = './build/artifacts/';
 
   var srcFileNames = fs.readdirSync(TS_SOURCE_DIR).filter(e => /\.ts$/.test(e));
@@ -86,31 +86,31 @@ gulp.task('bundle-release', function() {
 gulp.task('chrome', ['bundle'], function() {
   return es.merge(
     pipe('./build/artifacts/*.js', './build/chrome/js'),
-    pipe('./img/**/*', './build/chrome/img'),
-    pipe('./css/**/*', './build/chrome/css'),
-    pipe('./html/**/*', './build/chrome/html'),
-    pipe('./vendor/chrome/manifest.json', './build/chrome/')
+    pipe('./src/img/**/*', './build/chrome/img'),
+    pipe('./src/css/**/*', './build/chrome/css'),
+    pipe('./src/html/**/*', './build/chrome/html'),
+    pipe('./src/browser/chrome/manifest.json', './build/chrome/')
   );
 });
 
 gulp.task('firefox', ['bundle'], function() {
   return es.merge(
     pipe('./build/artifacts/*.js', './build/firefox/js'),
-    pipe('./img/**/*', './build/firefox/img'),
-    pipe('./css/**/*', './build/firefox/css'),
-    pipe('./html/**/*', './build/firefox/html'),
-    pipe('./vendor/firefox/manifest.json', './build/firefox/')
+    pipe('./src/img/**/*', './build/firefox/img'),
+    pipe('./src/css/**/*', './build/firefox/css'),
+    pipe('./src/html/**/*', './build/firefox/html'),
+    pipe('./src/browser/firefox/manifest.json', './build/firefox/')
   );
 });
 
 gulp.task('safari', function() {
   return es.merge(
     pipe('./build/artifacts/*.js', './build/safari/willsave.safariextension/js'),
-    pipe('./img/**/*', './build/safari/willsave.safariextension/img'),
-    pipe('./css/**/*', './build/safari/willsave.safariextension/css'),
-    pipe('./html/**/*', './build/safari/willsave.safariextension/html'),
-    pipe('./vendor/safari/Info.plist', './build/safari/willsave.safariextension'),
-    pipe('./vendor/safari/Settings.plist', './build/safari/willsave.safariextension')
+    pipe('./src/img/**/*', './build/safari/willsave.safariextension/img'),
+    pipe('./src/css/**/*', './build/safari/willsave.safariextension/css'),
+    pipe('./src/html/**/*', './build/safari/willsave.safariextension/html'),
+    pipe('./src/browser/safari/Info.plist', './build/safari/willsave.safariextension'),
+    pipe('./src/browser/safari/Settings.plist', './build/safari/willsave.safariextension')
   );
 });
 
@@ -129,7 +129,7 @@ gulp.task('firefox-dist', function() {
 });
 
 gulp.task('safari-dist', function() {
-  pipe('./vendor/safari/Update.plist', './dist/safari');
+  pipe('./src/browser/safari/Update.plist', './dist/safari');
 });
 
 gulp.task('firefox-run', shell.task(['cd ./build/firefox && ../../tools/addon-sdk-1.16/bin/cfx run']));
@@ -139,11 +139,11 @@ gulp.task('dist', function(cb) {
 });
 
 gulp.task('watch-firefox', ['clean', 'firefox'], function() {
-  gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['firefox']);
+  gulp.watch(['./src/**/*'], ['firefox']);
 });
 
 gulp.task('watch-chrome', ['clean', 'chrome'], function() {
-  gulp.watch(['./js/**/*', './ts/**/*', './css/**/*', './vendor/**/*', './img/**/*', './html/**/*'], ['chrome']);
+  gulp.watch(['./src/**/*'], ['chrome']);
 });
 
 gulp.task('run', function(cb) {

@@ -45,5 +45,10 @@
     "lodash": "^4.17.4",
     "loglevel": "^1.4.1",
     "web-ext-types": "^0.2.0"
+  },
+  "scripts": {
+    "build": "gulp chrome firefox",
+    "dist": "gulp chrome-dist firefox-dist",
+    "watch": "gulp watch-firefox"
   }
 }

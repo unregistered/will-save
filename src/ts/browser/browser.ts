@@ -1,5 +1,5 @@
-/// <reference path="../../node_modules/@types/chrome/index.d.ts"/>
-/// <reference path="../../node_modules/web-ext-types/global/index.d.ts"/>
+/// <reference path="../../../node_modules/@types/chrome/index.d.ts"/>
+/// <reference path="../../../node_modules/web-ext-types/global/index.d.ts"/>
 
 export type OnWriteCallback = () => void;
 export type OnReadCallback = (items: { [keys: string]: any }) => void;
