@@ -98,6 +98,10 @@ $(document).ready(() => {
     $('#duolingo-username').val(username);
   });
 
+  access.getExpPerReward(exp => {
+    $('#exp-per-reward').val(exp);
+  });
+
   // Load from save
   access.getBlockList(list => {
     blacklist.setArray(list);
@@ -109,10 +113,12 @@ $(document).ready(() => {
     let currencyPerLesson = parseInt($('#currency-per-lesson').val());
     let minutesPerCurrency = parseInt($('#minutes-per-currency').val());
     let duoUsername: string = $('#duolingo-username').val();
+    let expPerReward = parseInt($('#exp-per-reward').val());
 
     access.setBlockList(blacklist.getArray(), () => {});
     access.setDefaultCurrencyPerLesson(currencyPerLesson, () => {});
     access.setDefaultTime(minutesPerCurrency, () => {});
+    access.setExpPerReward(expPerReward, () => {});
 
     access.getDuolingoUsername(oldUsername => {
       let rawFieldUsername = duoUsername;

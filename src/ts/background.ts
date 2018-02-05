@@ -31,40 +31,49 @@ class CurrencyUpdater {
   }
 
   private doUpdate(callback: () => void) {
-    access.getDuolingoUsername(username => {
-      let api = new DuolingoAPI($, username);
+    access.getExpPerReward(expPerReward => {
+      access.getDuolingoUsername(username => {
+        let api = new DuolingoAPI($, username);
 
-      api.getData((data: DuolingoAPIResponse) => {
-        if (data.error) {
-          Logger.error(data);
-        } else {
-          Logger.info('Received API response', data);
-          access.getLastCheckPoints(oldPoints => {
-            if (oldPoints > 0) {
-              let diff = data.totalPoints - oldPoints;
-              let overflow = diff % 10;
-              let lessonsCompleted = Math.floor(diff / 10);
+        api.getData((data: DuolingoAPIResponse) => {
+          if (data.error) {
+            Logger.error(data);
+          } else {
+            Logger.info('Received API response', data);
+            access.getLastCheckPoints(oldPoints => {
+              if (oldPoints > 0) {
+                let diff = data.totalPoints - oldPoints;
+                let overflow = diff % expPerReward;
+                let lessonsCompleted = Math.floor(diff / expPerReward);
 
-              Logger.info(data.totalPoints, oldPoints, diff, overflow, lessonsCompleted);
-
-              if (lessonsCompleted > 0) {
-                let newPoints = data.totalPoints - overflow;
-                Logger.info('Set new points:', newPoints);
-                access.incrementCurrency(lessonsCompleted, () => {
-                  access.setLastCheckPoints(newPoints, () => {
-                    callback();
-                  });
+                Logger.info({
+                  totalPoints: data.totalPoints,
+                  oldPoints: oldPoints,
+                  diff,
+                  overflow,
+                  lessonsCompleted,
+                  expPerReward
                 });
+
+                if (lessonsCompleted > 0) {
+                  let newPoints = data.totalPoints - overflow;
+                  Logger.info('Set new points:', newPoints);
+                  access.incrementCurrency(lessonsCompleted, () => {
+                    access.setLastCheckPoints(newPoints, () => {
+                      callback();
+                    });
+                  });
+                } else {
+                  Logger.info('No changes were made.');
+                  callback();
+                }
               } else {
-                Logger.info('No changes were made.');
+                Logger.error('Points are unititialized, user must do setup');
                 callback();
               }
-            } else {
-              Logger.error('Points are unititialized, user must do setup');
-              callback();
-            }
-          });
-        }
+            });
+          }
+        });
       });
     });
   }

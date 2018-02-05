@@ -20,8 +20,9 @@
 </head>
 
 <body>
-  <div class="container">
-    <form>
+  <form>
+    <div class="container">
+
       <div class="form-group">
         <label for="duolingo-username">Duolingo Username</label>
         <input class="form-control" type="text" id="duolingo-username"></input>
@@ -29,7 +30,12 @@
       </div>
 
       <div class="form-group">
-        <label for="currency-per-lesson">Potions per Review</label>
+        <label for="exp-per-reward">Exp per Reward (A typical lesson is 10 Exp)</label>
+        <input class="form-control" type="number" id="exp-per-reward"></input>
+      </div>
+
+      <div class="form-group">
+        <label for="currency-per-lesson">Potions per Reward</label>
         <input class="form-control" type="number" id="currency-per-lesson"></input>
       </div>
 
@@ -48,12 +54,20 @@
         <textarea id="blocked-sites" class="form-control" rows="5"></textarea>
       </div>
 
-      <div class="form-group">
-        <button id="save" type="submit" class="btn btn-primary btn-block">Save</button>
-        <div id="status"></div>
-      </div>
-    </form>
-  </div>
+      <hr/>
+
+      <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+          <div class="form-group" style="margin-top: 10px">
+            <button id="save" type="submit" class="btn btn-primary btn-block">Save</button>
+            <div id="status"></div>
+          </div>
+        </div>
+      </nav>
+
+    </div>
+
+  </form>
 
   <script src="../js/lib.js"></script>
   <script src="../js/options.js"></script>

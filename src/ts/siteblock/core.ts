@@ -9,7 +9,8 @@ export enum DataKey {
   MINUTES_PER_CURRENCY,
   CURRENCY_PER_REVIEW,
   DUOLINGO_USERNAME,
-  DUOLINGO_LAST_CHECK_POINTS
+  DUOLINGO_LAST_CHECK_POINTS,
+  EXP_PER_REWARD
 }
 
 export class TypedDatastore {
@@ -171,5 +172,13 @@ export class DatastoreAccess {
 
   setLastCheckPoints(points: number, onComplete: () => void) {
     this.store.setData(DataKey.DUOLINGO_LAST_CHECK_POINTS, points, onComplete);
+  }
+
+  getExpPerReward(callback: (reward: number) => void) {
+    this.store.getData<number>(DataKey.EXP_PER_REWARD, callback, 10);
+  }
+
+  setExpPerReward(exp: number, onComplete: () => void) {
+    this.store.setData(DataKey.EXP_PER_REWARD, exp, onComplete);
   }
 }
