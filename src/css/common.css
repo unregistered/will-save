@@ -1,4 +1,4 @@
-#will-save-ui {
+.will-save-ui {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@
   z-index: 2147483647 !important;
 }
 
-#will-save-ui .fallback-text {
+.will-save-ui .fallback-text {
   margin: 20% auto;
   font-size: 18pt;
   width: 400px;

@@ -45,10 +45,10 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
       $(document).ready(() => {
         console.info('Will-Save will block this page');
         if (browser.getName() === 'Chrome') {
-          let e = $('<iframe>', { src: url, id: 'will-save-ui' });
+          let e = $('<iframe>', { src: url, class: 'will-save-ui' });
           $('body').append(e);
         } else if (browser.getName() === 'Firefox') {
-          const wrapper = $('<div>', { id: 'will-save-ui' });
+          const wrapper = $('<div>', { class: 'will-save-ui' });
 
           const msg = $('<div>', { class: 'fallback-text' });
           msg.html(
@@ -67,8 +67,8 @@ if (/.*duolingo\.com/.test(window.location.hostname)) {
     };
 
     let endBlock = () => {
-      console.log('Remove blocker:', $('#will-save-ui'));
-      $('#will-save-ui').remove();
+      console.log('Remove blocker:', $('.will-save-ui'));
+      $('.will-save-ui').remove();
     };
 
     let endBlockIfNeeded = (now: number, newTime: number) => {
