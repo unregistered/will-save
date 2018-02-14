@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Will Save: Duolingo Powered Site Blocker",
   "description": "Blocks time wasting sites until Duolingo reviews are done.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "incognito": "spanning",
 
   "applications": {
