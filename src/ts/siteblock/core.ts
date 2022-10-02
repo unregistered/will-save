@@ -86,21 +86,13 @@ export class DatastoreAccess {
     );
   }
 
-  giveDefaultTime(onComplete: () => void) {
+  giveTime(amount: number, onComplete: () => void) {
     this.getDefaultTime(minutes => {
       let now = new Date().getTime();
-      let timeToAdd = minutes * 60 * 1000;
+      let timeToAdd = amount * minutes * 60 * 1000;
       this.store.setData(DataKey.CURRENT_SESSION_VALID_UNTIL, now + timeToAdd, () => {
         onComplete();
       });
-    });
-  }
-
-  giveCustomTime(milliseconds: number, onComplete: () => void) {
-    let now = new Date().getTime();
-    let timeToAdd = milliseconds;
-    this.store.setData(DataKey.CURRENT_SESSION_VALID_UNTIL, now + timeToAdd, () => {
-      onComplete();
     });
   }
 
