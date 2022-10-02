@@ -48,7 +48,7 @@ $(document).ready(() => {
       amount,
       () => {
         // Give the user more time
-        access.giveDefaultTime(() => {
+        access.giveTime(amount, () => {
           if (browser.getName() === 'Firefox') {
             // In firefox since this is a new tab, close this tab
             setTimeout(() => browser.closeCurrentTab(), 100);
